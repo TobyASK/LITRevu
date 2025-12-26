@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Créer une critique - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Créer une critique</h1>
+
+<div class="card">
+    <h2 style="margin-bottom: 1rem;">Livre / Article</h2>
+    
+    <form method="post" enctype="multipart/form-data" novalidate aria-label="Formulaire de création de billet et critique">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_title" class="form-label">Titre *</label>
+            {{ ticket_form.title }}
+            {% if ticket_form.title.errors %}
+            <div class="form-errors" role="alert">
+                {{ ticket_form.title.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description" class="form-label">Description</label>
+            {{ ticket_form.description }}
+            {% if ticket_form.description.errors %}
+            <div class="form-errors" role="alert">
+                {{ ticket_form.description.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_image" class="form-label">Image</label>
+            {{ ticket_form.image }}
+            {% if ticket_form.image.errors %}
+            <div class="form-errors" role="alert">
+                {{ ticket_form.image.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+        <h2 style="margin-bottom: 1rem;">Votre critique</h2>
+
+        <div class="form-group">
+            <label for="id_headline" class="form-label">Titre de la critique *</label>
+            {{ review_form.headline }}
+            {% if review_form.headline.errors %}
+            <div class="form-errors" role="alert">
+                {{ review_form.headline.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Note *</label>
+            <div class="rating-group" role="radiogroup" aria-label="Note de 0 à 5">
+                {% for radio in review_form.rating %}
+                <div class="rating-option">
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }} {% if radio.choice_label == "0" %}- Mauvais{% elif radio.choice_label == "5" %}- Excellent{% endif %}</label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if review_form.rating.errors %}
+            <div class="form-errors" role="alert">
+                {{ review_form.rating.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_body" class="form-label">Commentaire</label>
+            {{ review_form.body }}
+            {% if review_form.body.errors %}
+            <div class="form-errors" role="alert">
+                {{ review_form.body.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Publier</button>
+            <a href="{% url 'feed' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

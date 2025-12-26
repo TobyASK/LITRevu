@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier la critique - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Modifier la critique</h1>
+
+<div class="card">
+    <div class="ticket-preview">
+        <p class="card-meta">Critique en réponse à :</p>
+        <h2 class="card-title">{{ review.ticket.title }}</h2>
+    </div>
+</div>
+
+<div class="card">
+    <form method="post" novalidate aria-label="Formulaire de modification de critique">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_headline" class="form-label">Titre de la critique *</label>
+            {{ form.headline }}
+            {% if form.headline.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.headline.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Note *</label>
+            <div class="rating-group" role="radiogroup" aria-label="Note de 0 à 5">
+                {% for radio in form.rating %}
+                <div class="rating-option">
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.rating.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.rating.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_body" class="form-label">Commentaire</label>
+            {{ form.body }}
+            {% if form.body.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.body.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'user_posts' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

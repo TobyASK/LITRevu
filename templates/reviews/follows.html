@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Abonnements - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Abonnements</h1>
+
+<!-- Formulaire pour suivre un utilisateur -->
+<div class="card">
+    <h2 style="margin-bottom: 1rem;">Suivre un utilisateur</h2>
+    
+    <form method="post" novalidate aria-label="Formulaire pour suivre un utilisateur">
+        {% csrf_token %}
+        
+        <div class="form-group" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+            <div style="flex: 1; min-width: 200px;">
+                <label for="id_username" class="form-label">Nom d'utilisateur</label>
+                {{ form.username }}
+            </div>
+            <button type="submit" class="btn btn-primary">Suivre</button>
+        </div>
+        
+        {% if form.username.errors %}
+        <div class="form-errors" role="alert">
+            {{ form.username.errors }}
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Liste des utilisateurs suivis -->
+<div class="card follows-section">
+    <h2 style="margin-bottom: 1rem;">Abonnements</h2>
+    
+    {% if following %}
+    <ul class="follows-list" aria-label="Liste des utilisateurs que vous suivez">
+        {% for follow in following %}
+        <li class="follows-item">
+            <span><strong>{{ follow.followed_user.username }}</strong></span>
+            <form method="post" action="{% url 'unfollow_user' follow.followed_user.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm" aria-label="Ne plus suivre {{ follow.followed_user.username }}">
+                    Ne plus suivre
+                </button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p style="color: var(--text-muted);">Vous ne suivez aucun utilisateur pour le moment.</p>
+    {% endif %}
+</div>
+
+<!-- Liste des abonnés -->
+<div class="card follows-section">
+    <h2 style="margin-bottom: 1rem;">Abonnés</h2>
+    
+    {% if followers %}
+    <ul class="follows-list" aria-label="Liste des utilisateurs qui vous suivent">
+        {% for follow in followers %}
+        <li class="follows-item">
+            <span><strong>{{ follow.user.username }}</strong></span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p style="color: var(--text-muted);">Aucun utilisateur ne vous suit pour le moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

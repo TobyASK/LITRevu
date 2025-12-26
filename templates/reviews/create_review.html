@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Créer une critique - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Créer une critique</h1>
+
+<div class="card">
+    <div class="ticket-preview">
+        <p class="card-meta">Vous répondez à ce billet :</p>
+        <h2 class="card-title">{{ ticket.title }}</h2>
+        {% if ticket.image %}
+        <img src="{{ ticket.image.url }}" alt="Couverture de {{ ticket.title }}" class="card-image">
+        {% endif %}
+        {% if ticket.description %}
+        <p>{{ ticket.description }}</p>
+        {% endif %}
+        <p class="card-meta">Par {{ ticket.user.username }} - {{ ticket.time_created|date:"d/m/Y" }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1rem;">Votre critique</h2>
+    
+    <form method="post" novalidate aria-label="Formulaire de création de critique">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_headline" class="form-label">Titre de la critique *</label>
+            {{ form.headline }}
+            {% if form.headline.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.headline.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Note *</label>
+            <div class="rating-group" role="radiogroup" aria-label="Note de 0 à 5">
+                {% for radio in form.rating %}
+                <div class="rating-option">
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }} {% if radio.choice_label == "0" %}- Mauvais{% elif radio.choice_label == "5" %}- Excellent{% endif %}</label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.rating.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.rating.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_body" class="form-label">Commentaire</label>
+            {{ form.body }}
+            {% if form.body.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.body.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Publier la critique</button>
+            <a href="{% url 'feed' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

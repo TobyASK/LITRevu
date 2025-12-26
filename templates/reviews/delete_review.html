@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer la critique - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Supprimer la critique</h1>
+
+<div class="card">
+    <div class="alert alert-warning" role="alert">
+        <p><strong>Attention !</strong> Vous êtes sur le point de supprimer cette critique :</p>
+    </div>
+
+    <div class="ticket-preview">
+        <p class="card-meta">En réponse à : {{ review.ticket.title }}</p>
+    </div>
+
+    <h2 class="card-title">{{ review.headline }}</h2>
+    <div class="rating" aria-label="Note : {{ review.rating }} sur 5">
+        {% for i in "12345" %}
+            {% if forloop.counter <= review.rating %}
+            <span class="rating-star" aria-hidden="true">★</span>
+            {% else %}
+            <span class="rating-star empty" aria-hidden="true">★</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% if review.body %}
+    <p style="margin-top: 1rem;">{{ review.body|truncatewords:30 }}</p>
+    {% endif %}
+    <p class="card-meta">Créée le {{ review.time_created|date:"d/m/Y à H:i" }}</p>
+
+    <p style="margin: 1rem 0;"><strong>Cette action est irréversible.</strong></p>
+
+    <form method="post" aria-label="Confirmation de suppression">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+            <a href="{% url 'user_posts' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

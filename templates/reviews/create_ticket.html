@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Créer un billet - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Demander une critique</h1>
+
+<div class="card">
+    <form method="post" enctype="multipart/form-data" novalidate aria-label="Formulaire de création de billet">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_title" class="form-label">Titre *</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.title.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description" class="form-label">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.description.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_image" class="form-label">Image</label>
+            {{ form.image }}
+            {% if form.image.errors %}
+            <div class="form-errors" role="alert">
+                {{ form.image.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Créer le billet</button>
+            <a href="{% url 'feed' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

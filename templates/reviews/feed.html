@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Flux - LITRevu{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Flux</h1>
+    <div class="btn-group">
+        <a href="{% url 'create_ticket' %}" class="btn btn-primary">
+            Demander une critique
+        </a>
+        <a href="{% url 'create_ticket_and_review' %}" class="btn btn-secondary">
+            Créer une critique
+        </a>
+    </div>
+</div>
+
+{% if posts %}
+    {% for post in posts %}
+        <article class="card" aria-label="{% if post.content_type == 'REVIEW' %}Critique{% else %}Billet{% endif %} de {{ post.user.username }}">
+            <div class="card-header">
+                <div>
+                    <span class="badge {% if post.content_type == 'REVIEW' %}badge-review{% else %}badge-ticket{% endif %}">
+                        {% if post.content_type == 'REVIEW' %}Critique{% else %}Billet{% endif %}
+                    </span>
+                    <p class="card-meta">
+                        {{ post.time_created|date:"d/m/Y à H:i" }} - 
+                        <strong>{{ post.user.username }}</strong>
+                    </p>
+                </div>
+                {% if post.is_own %}
+                <div class="btn-group">
+                    {% if post.content_type == 'REVIEW' %}
+                    <a href="{% url 'edit_review' post.id %}" class="btn btn-outline btn-sm" aria-label="Modifier cette critique">
+                        Modifier
+                    </a>
+                    <a href="{% url 'delete_review' post.id %}" class="btn btn-danger btn-sm" aria-label="Supprimer cette critique">
+                        Supprimer
+                    </a>
+                    {% else %}
+                    <a href="{% url 'edit_ticket' post.id %}" class="btn btn-outline btn-sm" aria-label="Modifier ce billet">
+                        Modifier
+                    </a>
+                    <a href="{% url 'delete_ticket' post.id %}" class="btn btn-danger btn-sm" aria-label="Supprimer ce billet">
+                        Supprimer
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            {% if post.content_type == 'REVIEW' %}
+                <!-- Afficher le ticket associé à la critique -->
+                <div class="ticket-preview">
+                    <p class="card-meta">En réponse à :</p>
+                    <h3 class="card-title">{{ post.ticket.title }}</h3>
+                    {% if post.ticket.image %}
+                    <img src="{{ post.ticket.image.url }}" alt="Couverture de {{ post.ticket.title }}" class="card-image">
+                    {% endif %}
+                    {% if post.ticket.description %}
+                    <p>{{ post.ticket.description|truncatewords:30 }}</p>
+                    {% endif %}
+                </div>
+
+                <h2 class="card-title">{{ post.headline }}</h2>
+                <div class="rating" aria-label="Note : {{ post.rating }} sur 5">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= post.rating %}
+                        <span class="rating-star" aria-hidden="true">★</span>
+                        {% else %}
+                        <span class="rating-star empty" aria-hidden="true">★</span>
+                        {% endif %}
+                    {% endfor %}
+                    <span class="visually-hidden">{{ post.rating }}/5</span>
+                </div>
+                {% if post.body %}
+                <div class="card-body">
+                    <p>{{ post.body }}</p>
+                </div>
+                {% endif %}
+            {% else %}
+                <!-- Afficher un billet -->
+                <h2 class="card-title">{{ post.title }}</h2>
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="Couverture de {{ post.title }}" class="card-image">
+                {% endif %}
+                {% if post.description %}
+                <div class="card-body">
+                    <p>{{ post.description }}</p>
+                </div>
+                {% endif %}
+                {% if not post.has_review and not post.is_own %}
+                <div class="post-actions">
+                    <a href="{% url 'create_review' post.id %}" class="btn btn-primary btn-sm">
+                        Créer une critique
+                    </a>
+                </div>
+                {% endif %}
+            {% endif %}
+        </article>
+    {% endfor %}
+{% else %}
+    <div class="card empty-state">
+        <p>Votre flux est vide.</p>
+        <p>Commencez par suivre d'autres utilisateurs ou créez votre premier billet !</p>
+        <div class="btn-group" style="justify-content: center;">
+            <a href="{% url 'create_ticket' %}" class="btn btn-primary">Créer un billet</a>
+            <a href="{% url 'follows' %}" class="btn btn-secondary">Suivre des utilisateurs</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
