@@ -1,6 +1,7 @@
 """
 Script pour générer des données de test pour l'application LITRevu.
 """
+
 import os
 import django
 from django.contrib.auth import get_user_model

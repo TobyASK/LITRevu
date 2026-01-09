@@ -27,6 +27,9 @@ env/
 # Fichiers statiques collectés
 staticfiles/
 
+# Clé secrète Django
+key.txt
+
 # Logs
 *.log
 

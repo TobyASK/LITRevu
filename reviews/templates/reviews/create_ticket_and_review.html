@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Créer une critique - LITRevu{% endblock %}
+{% block title %}Créer un billet et une critique - LITRevu{% endblock %}
 
 {% block content %}
-<h1 class="page-title">Créer une critique</h1>
+<h1 class="page-title">Créer un billet et une critique</h1>
 
 <div class="card">
-    <h2 class="section-title">Livre / Article</h2>
-    
     <form method="post" enctype="multipart/form-data" novalidate aria-label="Formulaire de création de billet et critique">
         {% csrf_token %}
 
         <div class="form-group">
-            <label for="id_title" class="form-label">Titre *</label>
+            <label for="id_title" class="form-label">Titre du billet *</label>
             {{ ticket_form.title }}
             {% if ticket_form.title.errors %}
             <div class="form-errors" role="alert">
@@ -41,9 +39,8 @@
             {% endif %}
         </div>
 
-        <hr class="section-divider">
-
-        <h2 class="section-title">Votre critique</h2>
+        <hr>
+        <h2 class="card-title">Votre critique</h2>
 
         <div class="form-group">
             <label for="id_headline" class="form-label">Titre de la critique *</label>
@@ -58,12 +55,7 @@
         <div class="form-group">
             <label class="form-label">Note *</label>
             <div class="rating-group" role="radiogroup" aria-label="Note de 0 à 5">
-                {% for radio in review_form.rating %}
-                <div class="rating-option">
-                    {{ radio.tag }}
-                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }} {% if radio.choice_label == "0" %}- Mauvais{% elif radio.choice_label == "5" %}- Excellent{% endif %}</label>
-                </div>
-                {% endfor %}
+                {{ review_form.rating }}
             </div>
             {% if review_form.rating.errors %}
             <div class="form-errors" role="alert">
@@ -73,7 +65,7 @@
         </div>
 
         <div class="form-group">
-            <label for="id_body" class="form-label">Commentaire</label>
+            <label for="id_body" class="form-label">Votre critique *</label>
             {{ review_form.body }}
             {% if review_form.body.errors %}
             <div class="form-errors" role="alert">
@@ -82,10 +74,7 @@
             {% endif %}
         </div>
 
-        <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Publier</button>
-            <a href="{% url 'feed' %}" class="btn btn-secondary">Annuler</a>
-        </div>
+        <button type="submit" class="btn btn-primary">Créer le billet et la critique</button>
     </form>
 </div>
 {% endblock %}

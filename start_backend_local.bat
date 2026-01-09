@@ -1,5 +1,5 @@
 @echo off
-REM === Script de démarrage LITRevu (Backend) ===
+REM === Script de démarrage LITRevu (Backend - LOCAL) ===
 cd /d %~dp0
 
 REM Activer l'environnement virtuel s'il existe
@@ -17,14 +17,17 @@ pip install -r requirements.txt
 
 REM Appliquer les migrations
 echo Application des migrations...
+set DJANGO_ENV=local
 python manage.py migrate
 
 REM Peupler la base de données de test (optionnel, sans risque)
 echo Remplissage des données de test...
-python populate_db.py
+set DJANGO_ENV=local
+python manage.py populate_db
 
 REM Lancer le serveur Django
 echo Démarrage du serveur de développement Django sur le port 8001...
+set DJANGO_ENV=local
 python manage.py runserver 8001
 
 REM Pour démarrer le frontend, ajoutez la commande correspondante ci-dessous

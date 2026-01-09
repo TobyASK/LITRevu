@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer le billet - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Supprimer le billet</h1>
+
+<div class="card">
+    <div class="alert alert-warning" role="alert">
+        <p><strong>Attention !</strong> Vous êtes sur le point de supprimer ce billet :</p>
+    </div>
+
+    <div class="ticket-preview">
+        <h2 class="card-title">{{ ticket.title }}</h2>
+        {% if ticket.description %}
+        <p>{{ ticket.description|truncatewords:30 }}</p>
+        {% endif %}
+        <p class="card-meta">Créé le {{ ticket.time_created|date:"d/m/Y à H:i" }}</p>
+    </div>
+
+    <p style="margin: 1rem 0;"><strong>Cette action est irréversible.</strong></p>
+
+    <form method="post" aria-label="Confirmation de suppression">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+            <a href="{% url 'user_posts' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Ne plus suivre - LITRevu{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Ne plus suivre</h1>
+
+<div class="card">
+    <div class="alert alert-warning" role="alert">
+        <p>Êtes-vous sûr de vouloir ne plus suivre <strong>{{ user_to_unfollow.username }}</strong> ?</p>
+    </div>
+
+    <p style="margin: 1rem 0;">Vous ne verrez plus ses billets et critiques dans votre flux.</p>
+
+    <form method="post" aria-label="Confirmation pour ne plus suivre">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger">Confirmer</button>
+            <a href="{% url 'follows' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes posts - LITRevu{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Mes posts</h1>
+    <div class="btn-group">
+        <a href="{% url 'create_ticket' %}" class="btn btn-primary">
+            Demander une critique
+        </a>
+        <a href="{% url 'create_ticket_and_review' %}" class="btn btn-secondary">
+            Créer une critique
+        </a>
+    </div>
+</div>
+
+{% if posts %}
+    {% for post in posts %}
+        <article class="card" aria-label="{% if post.content_type == 'REVIEW' %}Ma critique{% else %}Mon billet{% endif %}">
+            <div class="card-header">
+                <div>
+                    <span class="badge {% if post.content_type == 'REVIEW' %}badge-review{% else %}badge-ticket{% endif %}">
+                        {% if post.content_type == 'REVIEW' %}Critique{% else %}Billet{% endif %}
+                    </span>
+                    <p class="card-meta">
+                        {{ post.time_created|date:"d/m/Y à H:i" }}
+                    </p>
+                </div>
+                <div class="btn-group">
+                    {% if post.content_type == 'REVIEW' %}
+                    <a href="{% url 'edit_review' post.id %}" class="btn btn-outline btn-sm" aria-label="Modifier cette critique">
+                        Modifier
+                    </a>
+                    <a href="{% url 'delete_review' post.id %}" class="btn btn-danger btn-sm" aria-label="Supprimer cette critique">
+                        Supprimer
+                    </a>
+                    {% else %}
+                    <a href="{% url 'edit_ticket' post.id %}" class="btn btn-outline btn-sm" aria-label="Modifier ce billet">
+                        Modifier
+                    </a>
+                    <a href="{% url 'delete_ticket' post.id %}" class="btn btn-danger btn-sm" aria-label="Supprimer ce billet">
+                        Supprimer
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if post.content_type == 'TICKET' and post.image %}
+            <img src="{{ post.image.url }}" alt="Couverture de {{ post.title }}" class="card-image">
+            {% endif %}
+            <h2 class="card-title">{% if post.content_type == 'REVIEW' %}{{ post.headline }}{% else %}{{ post.title }}{% endif %}</h2>
+            {% if post.content_type == 'REVIEW' %}
+            <div class="rating" aria-label="Note : {{ post.rating }} sur 5">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= post.rating %}
+                    <span class="rating-star" aria-hidden="true">★</span>
+                    {% else %}
+                    <span class="rating-star empty" aria-hidden="true">★</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if post.content_type == 'REVIEW' %}
+            <p>{{ post.body|truncatewords:30 }}</p>
+            {% else %}
+            <p>{{ post.description|truncatewords:30 }}</p>
+            {% endif %}
+        </article>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <p>Vous n'avez publié aucun billet ou critique pour le moment.</p>
+    </div>
+{% endif %}
+{% endblock %}
